@@ -82,4 +82,9 @@
         </repository>
     </distributionManagement>
 
+    <packaging>pom</packaging>
+    <modules>
+        <module>service-registry-eureka</module>
+    </modules>
+
 </project>
