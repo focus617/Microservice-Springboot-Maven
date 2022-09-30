@@ -68,4 +68,18 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Artifactory-Development-snapshots</name>
+            <url>http://192.168.31.10:8083/artifactory/libs-snapshot</url>
+        </snapshotRepository>
+
+        <repository>
+            <id>central</id>
+            <name>Artifactory-Development-releases</name>
+            <url>http://192.168.31.10:8083/artifactory/libs-release</url>
+        </repository>
+    </distributionManagement>
+
 </project>
