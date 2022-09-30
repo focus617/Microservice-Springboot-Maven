@@ -1,0 +1,19 @@
+# 应用名称
+spring:
+  application:
+    name: service-registry-eureka
+
+# 应用服务 WEB访问端口
+server:
+  port: 8761
+
+# 应用服务定义
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: eureka-server
+  server:
+    number-of-replication-retries: 1
+  client:
+    fetch-registry: false
+    register-with-eureka: false
