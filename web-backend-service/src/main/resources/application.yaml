@@ -1,0 +1,32 @@
+# 应用名称
+spring:
+  application:
+    name: Web-Backend-Service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mydatabase
+    username: root
+    password: Alc@tel12
+    hikari:
+      # used for waiting MySQL container to startup
+      initialization-fail-timeout: 10000
+
+  jpa:
+    generate-ddl: true
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      # DB will be drop&create each time, initial data will be seeded by domain.repository.seeders.DataSeeder
+      ddl-auto: create-drop
+
+# 应用服务 WEB访问端口
+server:
+  port: 8080
+  error:
+    include-message: always
+
+# 调试开关
+debug: true
