@@ -1,0 +1,60 @@
+GET http://localhost:8080
+###
+GET http://localhost:8080/api
+###
+GET http://localhost:8080/api/v1/products
+###
+GET http://localhost:8080/api/v1/products/parameters
+###
+GET http://localhost:8080/api/v1/products/parameters?sort=desc
+###
+GET http://localhost:8080/api/v1/products/parameters?page=4
+
+### Creat new product
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "code": "Code#124",
+  "title": "Title New",
+  "description": "Description New",
+  "image": "http://focus617.com/200/200?1234",
+  "price": 17.096355532475926
+}
+
+### GET created product
+GET http://localhost:8080/api/v1/products/51
+
+### Should fail due to product code has been taken
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "code": "Code#10",
+  "title": "Title New",
+  "description": "Description New",
+  "image": "http://focus617.com/200/200?1234",
+  "price": 17.096355532475926
+}
+
+### Change new product
+PATCH http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "id": 51,
+  "title": "Title Changed",
+  "description": "Description Changed",
+  "image": "http://focus617.com/200/200?9876",
+  "price": 1.2345678
+}
+
+###
+PUT http://localhost:8080/api/v1/products/51?title=newtitlebyput
+###
+PUT http://localhost:8080/api/v1/products/51?description=newDescription
+###
+PUT http://localhost:8080/api/v1/products/51?title=title&description=Description&price=0.10&image=https://focus617.com/21233
+
+###
+DELETE http://localhost:8080/api/v1/products/51
