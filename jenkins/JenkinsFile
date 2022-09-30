@@ -1,0 +1,62 @@
+pipeline {
+  agent {
+    kubernetes {
+      yamlFile 'jenkins/agent_kubernetes.yaml'
+    }
+  }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+    durabilityHint('PERFORMANCE_OPTIMIZED')
+    disableConcurrentBuilds()
+  }
+  environment {
+    BUILD_TAG='latest'
+  }
+  stages {
+    stage('Checkout SCM') {
+      steps {
+        container('git') {
+          sh 'git --version'
+          git branch: 'develop', url: 'https://github.com/focus617/service-eureka-maven.git'
+        }
+      }
+    }
+    stage('Retrieve Git Tag') {
+      steps {
+        script {
+          def pom = sh(script:'git rev-parse --short HEAD', returnStdout: true).trim()
+          BUILD_TAG = pom
+          sh "echo Build_Tag=${BUILD_TAG}"
+        }
+      }
+    }
+    stage('Build Maven Package') {
+      steps {
+        container('maven') {
+          sh 'mvn --version'
+          sh 'mvn -Dmaven.test.failure.ignore=true clean package'
+        }
+      }
+      post {
+        success {
+          junit '**/target/surefire-reports/*.xml'
+        }
+        failure {
+          echo 'Build Maven Package failure.'
+        }
+      }
+    }
+    stage('3') {
+      steps {
+        container('kubectl') {
+          sh 'kubectl version'
+        }
+      }
+    }
+  }
+  post {
+    always {
+      echo 'Pipeline finish.'
+    }
+  }
+}

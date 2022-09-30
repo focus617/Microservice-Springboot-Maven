@@ -1,0 +1,96 @@
+pipeline {
+  agent {
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: builder
+        spec:
+          containers:
+          - name: kubectl
+            image: joshendriks/alpine-k8s:latest
+            imagePullPolicy: IfNotPresent
+            resources:
+              limits:
+                memory: "256Mi"
+                cpu: "250m"
+            command:
+            - cat
+            tty: true
+          - name: git
+            image: bitnami/git:latest
+            imagePullPolicy: IfNotPresent
+            command:
+            - cat
+            tty: true
+          - name: maven
+            image: maven:alpine
+            imagePullPolicy: IfNotPresent
+            resources:
+              limits:
+                memory: 1Gi
+                cpu: "1000m"
+              requests:
+                memory: 512Mi
+                cpu: "500m"
+            command:
+            - cat
+            tty: true
+            volumeMounts:
+            - mountPath: "/root/.m2"
+              name: maven-cache
+          volumes:
+          - name: maven-cache
+            persistentVolumeClaim:
+              claimName: maven-pv-claim
+      '''
+    }
+  }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+    durabilityHint('PERFORMANCE_OPTIMIZED')
+    disableConcurrentBuilds()
+  }
+  environment {
+    BUILD_TAG='latest'
+  }
+  stages {
+    stage('Checkout SCM') {
+      steps {
+        container('git') {
+          sh 'git --version'
+          git branch: 'develop', url: 'https://github.com/focus617/service-eureka-maven.git'
+        }
+      }
+    }
+    stage('Build Maven Package') {
+      steps {
+        container('maven') {
+          sh 'mvn --version'
+          sh 'mvn -Dmaven.test.failure.ignore=true clean package'
+        }
+      }
+      post {
+        success {
+          echo 'junit **/target/surefire-reports/*.xml'
+        }
+        failure {
+          echo 'Build Maven Package failure.'
+        }
+      }
+    }
+    stage('3') {
+      steps {
+        container('kubectl') {
+          sh 'kubectl version'
+        }
+      }
+    }
+  }
+  post {
+    always {
+      echo 'Pipeline finish.'
+    }
+  }
+}
