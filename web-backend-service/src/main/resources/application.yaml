@@ -2,6 +2,7 @@
 spring:
   application:
     name: Web-Backend-Service
+    version: 1.0.0-SNAPSHOT
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
