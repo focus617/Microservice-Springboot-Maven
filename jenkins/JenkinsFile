@@ -17,7 +17,7 @@ pipeline {
       steps {
         container('git') {
           sh 'git --version'
-          git branch: 'develop', url: 'https://github.com/focus617/service-eureka-maven.git'
+          git branch: 'develop', url: 'https://github.com/focus617/Microservice-Springboot-Maven.git'
         }
       }
     }
