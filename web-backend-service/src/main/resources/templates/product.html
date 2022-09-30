@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Default Title</title>
+</head>
+
+<body>
+<H1 th:text="${welcome}">Default H1</H1>
+<H2>List of products</H2>
+<table class="table table-stripped">
+    <thead>
+    <tr>
+        <td>Id</td>
+        <td>Code</td>
+        <td>Title</td>
+        <td>Description</td>
+        <td>Price</td>
+        <td>EXP.</td>
+    </tr>
+    </thead>
+    <tr th:each="product:${products}">
+        <td th:text="${product.id}">Id</td>
+        <td th:text="${product.code}">Code</td>
+        <td th:text="${product.title}">Title</td>
+        <td th:text="${product.description}">Description</td>
+        <td th:text="${product.price}">Price</td>
+        <td th:text="${product.expiringDate}">EXP.</td>
+    </tr>
+</table>
+
+
+<br>
+<a th:href="@{'/api/v1/products/template/parameters?page=' + ${currentPage} + '&sort=' + ${reverseSortDir}}"></a>
+
+<nav aria-label="Page navigation example">
+    Total Items [[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
+
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" th:if="${currentPage > 1}" th:href="@{/api/v1/products/template/parameters?page=1}">First</a>
+            <span th:unless="${currentPage > 1}">First</span>
+        </li>
+
+        <li class="page-item">
+            <a th:if="${currentPage > 1}"
+               th:href="@{'/api/v1/products/template/parameters?page=' + ${currentPage - 1}}">Previous</a>
+            <span th:unless="${currentPage > 1}">Previous</span>
+        </li>
+
+        <li class="page-item">
+            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${i != currentPage}"
+                   th:href="@{'/api/v1/products/template/parameters?page=' + ${i}}">[[${i}]]</a>
+                <span th:unless="${i != currentPage}">[[${i}]]</span>
+            </span>
+        </li>
+
+        <li class="page-item">
+            <a th:if="${currentPage < totalPages}"
+               th:href="@{'/api/v1/products/template/parameters?page=' + ${currentPage + 1}}">Next</a>
+            <span th:unless="${currentPage < totalPages}">Next</span>
+        </li>
+
+        <li class="page-item">
+            <a th:if="${currentPage < totalPages}"
+               th:href="@{'/api/v1/products/template/parameters?page=' + ${totalPages}}">Last</a>
+            <span th:unless="${currentPage < totalPages}">Last</span>
+        </li>
+    </ul>
+</nav>
+</body>
+
+<footer style="font-size: large" class="panel-footer">
+    Total Items [[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
+    &nbsp; &nbsp; - &nbsp;
+    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+        <a th:href="@{'/api/v1/products/template/parameters?page=' + ${i}}">[[${i}]]</a>
+        &nbsp; &nbsp;
+    </span>
+</footer>
+
+</html>
