@@ -1,0 +1,8 @@
+创建包含TLS证书的Secret
+
+a. 创建tls.key 和 tls.crt （参考Certification）
+$ openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout tls.key -out tls.crt -subj "/CN=focus617.com"  -days 365
+
+b. 创建myapp-secret-tls
+$ kubectl create namespace pipeline-deployment
+$ kubectl create secret tls myapp-secret-tls --cert=tls.crt --key=tls.key --namespace pipeline-deployment
