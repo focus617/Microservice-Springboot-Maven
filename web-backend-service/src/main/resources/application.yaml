@@ -31,6 +31,9 @@ spring:
     servlet:
       content-type: text/html
 
+  main:
+    lazy-initialization: true   # 所有Bean将不在初始化时创建，而只在使用时才会创建
+
 # 应用服务 WEB访问端口
 server:
   port: 8080
